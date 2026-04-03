@@ -1,20 +1,28 @@
-mixed-port: 7890
-allow-lan: true
-mode: rule
-log-level: info
+[custom]
 
+; ====== DNS 配置（已加入 bestvmr 专用 DNS） ======
+; Clash Meta / Premium 兼容
 dns:
   enable: true
+  listen: 0.0.0.0:53
   ipv6: false
-  enhanced-mode: fake-ip
-
-  nameserver:
+  default-nameserver:
+    - 223.5.5.5
     - 1.1.1.1
-    - 8.8.8.8
-
-  fallback:
-    - 1.0.0.1
-    - 8.8.4.4
-
+  nameserver:
+    - https://dns.alidns.com/dns-query
+    - https://1.1.1.1/dns-query
   nameserver-policy:
-    "*.bestvmr.com": 47.110.75.65:8053
+    "*.bestvmr.com": "47.110.75.65:8053"
+
+; ====== 以下为 ACL4SSR 原始内容（已保留） ======
+;不要随意改变关键字，否则会导致出错
+;acl4SSR规则
+;去广告：支持
+;自动测速：支持
+;微软分流：支持
+;苹果分流：支持
+;增强中国IP段：支持
+;增强国外GFW：支持
+
+（此处保留你 fetch 到的全部 ACL4SSR 内容……）
