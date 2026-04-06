@@ -95,14 +95,6 @@ function injectProviders(template, providerBlock) {
 main().then(result => {
   $done(result);
 }).catch(err => {
-  console.error(err.message);
-// 建议的容错处理方式
-if (typeof $content !== 'undefined' && $content) {
-    console.log("脚本处理成功");
-    $done($content);
-} else {
-    console.log("脚本处理出错：内容为空，返回原始节点以防止重启");
-    // 如果是在处理节点流，建议返回原始节点列表(假设为 nodes)
-    // 如果不知道原始变量，尝试返回空对象
-    $done({}); 
-}
+  console.error("[clash_substore] 脚本执行失败：" + err.message);
+  $done(""); // 出错时返回空字符串，Sub Store 会报错而不是崩溃
+});
