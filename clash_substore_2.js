@@ -1,25 +1,24 @@
 /**
- * @name Clash订阅转换
- * @description 引用Sub-Store订阅并处理节点
- * @param {string} name - Sub-Store中的订阅名称
+ * @name Clash 转换脚本
+ * @description 适配 Sub-Store 后端环境，去除 $done 报错
+ * @param {string} name - Sub-Store 订阅名
  */
 
 async function operator(proxies) {
-    // 获取订阅名参数，如果没有设置则默认处理传入的所有节点
-    const subName = $arguments.name;
-    
+    // 1. 容错处理：确保有节点输入
     if (!proxies || proxies.length === 0) {
         console.log("未发现有效节点");
-        return [];
+        return []; 
     }
 
-    console.log(`正在处理订阅: ${subName || '全部'}，节点总数: ${proxies.length}`);
+    // 2. 获取参数（如果你在第11步设置了参数）
+    const targetSub = $arguments.name;
+    console.log(`正在处理订阅: ${targetSub || '所有节点'}`);
 
-    // 这里可以添加你的过滤逻辑，例如：
-    // return proxies.filter(p => p.name.includes("香港"));
-    
+    // 3. 直接返回处理后的节点列表
+    // Sub-Store 会自动将其注入到你的 .ini 模板中
     return proxies;
 }
 
-// 在 Sub-Store 后端环境中，直接返回函数执行结果即可，不要使用 $done
+// 在 Sub-Store 后端环境中，使用这种方式导出函数
 module.exports = operator;
