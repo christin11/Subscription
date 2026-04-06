@@ -1,81 +1,73 @@
 /**
  * Sub Store 文件脚本 - Clash 模板注入
  * ─────────────────────────────────────
+ * 正确用法：文件脚本用 $content = 赋值，不用 $done()
+ *
  * 参数编辑中添加：
- *   key:   providers
- *   value: name1|url1,name2|url2,name3|url3
+ *   key:   name
+ *   value: 你在 Sub Store 里的订阅或组合订阅名称
  *
- * 其中 url 填你 Sub Store 生成的下载链接，例如：
- *   SaySS|http://127.0.0.1:2999/download/SaySS?target=clash
- *
- * 多个机场用英文逗号分隔。
+ *   key:   type
+ *   value: collection（组合订阅）或 subscription（单条订阅）
  */
 
-function main() {
+async function main() {
   // ── 1. 解析参数 ─────────────────────────────────────────────────────────
   const args = parseArgument($argument);
-  const raw = args["providers"];
-  if (!raw) {
-    throw new Error("缺少参数 providers");
-  }
+  const name = args['name'];
+  const type = args['type'] || 'collection';
 
-  // 格式：name1|url1,name2|url2
-  const providers = raw.split(",").map(item => {
-    const idx = item.indexOf("|");
-    if (idx === -1) throw new Error(`格式错误，缺少 | 分隔符：${item}`);
-    return {
-      name: item.slice(0, idx).trim(),
-      url:  item.slice(idx + 1).trim(),
-    };
-  }).filter(p => p.name && p.url);
+  if (!name) throw new Error('缺少参数 name');
 
-  if (!providers.length) {
-    throw new Error("providers 解析结果为空，请检查参数格式");
-  }
+  // ── 2. 通过 produceArtifact 拉取节点（Sub Store 内置函数）───────────────
+  // 这里拉 Clash 格式的节点列表（proxies 段）
+  const proxies = await produceArtifact({
+    type,           // 'subscription' 或 'collection'
+    name,           // 订阅名称
+    platform: 'Clash',
+  });
 
-  // ── 2. 构建 proxy-providers YAML 块 ─────────────────────────────────────
-  const providerYaml = providers.map(({ name, url }) => [
+  // proxies 是 YAML 格式的 proxies 列表字符串，例如：
+  // - name: 节点1
+  //   type: ss
+  //   ...
+
+  // ── 3. 构建 proxy-provider 块（用 inline 方式直接嵌入节点）────────────
+  // 用 content 类型的 provider，把节点直接内嵌，不需要外部 URL
+  const providerBlock = [
+    'proxy-providers:',
     `  ${name}:`,
-    `    type: http`,
-    `    url: "${url}"`,
-    `    interval: 86400`,
-    `    path: ./providers/${name}.yaml`,
-    `    health-check:`,
-    `      enable: true`,
-    `      interval: 600`,
-    `      url: "https://www.gstatic.com/generate_204"`,
-  ].join("\n")).join("\n");
+    '    type: inline',
+    '    proxies:',
+    // 把每行节点缩进到 proxies: 下面
+    ...proxies.split('\n').filter(l => l.trim()).map(l => '      ' + l),
+  ].join('\n');
 
-  const providerBlock = "proxy-providers:\n" + providerYaml;
-
-  // ── 3. 注入到模板 ────────────────────────────────────────────────────────
+  // ── 4. 注入到模板 ────────────────────────────────────────────────────────
   let template = $content;
   const pattern = /^proxy-providers:[\s\S]*?(?=^\w)/m;
 
   if (pattern.test(template)) {
-    template = template.replace(pattern, providerBlock + "\n");
+    template = template.replace(pattern, providerBlock + '\n');
   } else {
-    template = template.replace("proxy-groups:", providerBlock + "\nproxy-groups:");
+    template = template.replace('proxy-groups:', providerBlock + '\nproxy-groups:');
   }
 
-  return template;
+  // ── 5. 文件脚本用 $content 赋值返回 ─────────────────────────────────────
+  $content = template;
 }
 
-// ── 工具函数 ──────────────────────────────────────────────────────────────
 function parseArgument(argument) {
   const result = {};
   if (!argument) return result;
-  argument.split("&").forEach(pair => {
-    const [key, ...rest] = pair.split("=");
-    if (key) result[decodeURIComponent(key)] = decodeURIComponent(rest.join("="));
+  argument.split('&').forEach(pair => {
+    const [key, ...rest] = pair.split('=');
+    if (key) result[decodeURIComponent(key)] = decodeURIComponent(rest.join('='));
   });
   return result;
 }
 
-// ── 执行（同步，不用 async/await，避免环境兼容问题） ─────────────────────
-try {
-  $done(main());
-} catch (err) {
-  console.error("[clash_substore] " + err.message);
-  $done("");
-}
+main().catch(err => {
+  console.error('[clash_substore] ' + err.message);
+  // 出错时不修改 $content，保持模板原样
+});
