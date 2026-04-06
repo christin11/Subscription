@@ -36,16 +36,17 @@ const indentedProxies = proxiesYaml
   .map(l => '      ' + l)
   .join('\n')
 
-const providerBlock = `proxy-providers:\n  ${name}:\n    type: inline\n    proxies:\n${indentedProxies}`
+// 用一个唯一一点的名字，避免和别的脚本冲突
+const clashTemplateProviderBlock = `proxy-providers:\n  ${name}:\n    type: inline\n    proxies:\n${indentedProxies}`
 log(`③ proxy-providers 块构建完成`)
 
 // ── 4. 注入模板，替换 proxy-providers 区块 ───────────────────────────────
 let result = template
 const pattern = /^proxy-providers:.*?(?=^\w)/ms
 if (pattern.test(result)) {
-  result = result.replace(pattern, providerBlock + '\n')
+  result = result.replace(pattern, clashTemplateProviderBlock + '\n')
 } else {
-  result = result.replace('proxy-groups:', providerBlock + '\nproxy-groups:')
+  result = result.replace('proxy-groups:', clashTemplateProviderBlock + '\nproxy-groups:')
 }
 log(`④ 注入完成`)
 
