@@ -1,7 +1,7 @@
 // Clash 模板注入脚本（文件脚本）
 // 参数：name=订阅名称&type=collection（或 subscription）
 //
-// 脚本链接示例：
+// 用法示例：
 // https://raw.githubusercontent.com/christin11/Subscription-Templet/refs/heads/main/clash_substore_2.js#name=我的机场&type=collection
 
 log('🚀 开始')
@@ -33,76 +33,19 @@ let raw = await produceArtifact({
 log(`② 节点数据获取成功，长度 ${raw.length}`)
 
 // 期望 raw 大致长这样：
-// - {"type":"ss",...}
-// - {"type":"ss",...}
-// 现在把这些 JSON 行转成标准 YAML
-const lines = raw.split('\n').map(l => l.trim()).filter(Boolean)
-const yamlProxyLines = []
+// proxies:
+//   - {"type":"ss",...}
+//   - {"type":"ss",...}
+// 或者：
+//   - {"type":"ss",...}
+//   - {"type":"ss",...}
 
-for (const line of lines) {
-  if (!line.startsWith('-')) continue
+raw = raw.trim()
 
-  // 取出 { ... } 这一部分
-  const braceStart = line.indexOf('{')
-  const braceEnd = line.lastIndexOf('}')
-  if (braceStart === -1 || braceEnd === -1) continue
-
-  const jsonText = line.slice(braceStart, braceEnd + 1)
-
-  let obj
-  try {
-    obj = JSON.parse(jsonText)
-  } catch (e) {
-    log(`⚠️ 解析节点 JSON 失败，原始行：${line}`)
-    continue
-  }
-
-  // 写入一条 YAML 节点
-  yamlProxyLines.push('  -') // 开头的 -，后面再补 key/value
-
-  for (const [key, value] of Object.entries(obj)) {
-    const indent = '    ' // 两层缩进：2 空格列表 + 2 空格字段
-
-    if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
-      // 简单处理 plugin-opts 这种对象：一层嵌套
-      yamlProxyLines.push(`${indent}${key}:`)
-      for (const [k2, v2] of Object.entries(value)) {
-        yamlProxyLines.push(`${indent}  ${k2}: ${formatYamlScalar(v2)}`)
-      }
-    } else {
-      yamlProxyLines.push(`${indent}${key}: ${formatYamlScalar(value)}`)
-    }
-  }
+// 去掉可能存在的开头 "proxies:" 行，只保留后面的 - {...}
+if (raw.startsWith('proxies:')) {
+  raw = raw.replace(/^proxies:\s*/m, '')
 }
 
-// 如果没解析出任何节点，就直接抛错
-if (!yamlProxyLines.length) {
-  throw new Error('未能从订阅中解析出任何节点，请检查 Sub-Store 输出')
-}
-
-// 拼成最终的 proxies: 块
-const proxiesYaml = 'proxies:\n' + yamlProxyLines.join('\n')
-
-// ── 3. 合并 proxies 块 + 模板 ────────────────────────────────────────────
-const result = proxiesYaml.trimEnd() + '\n\n' + template.trimStart()
-log('③ 合并完成')
-
-// ── 4. 返回给 Sub-Store 作为最终订阅 ─────────────────────────────────────
-$content = result
-log('🔚 结束')
-
-function formatYamlScalar(v) {
-  // 数字 / 布尔值 直接输出
-  if (typeof v === 'number' || typeof v === 'boolean') return String(v)
-  if (v === null || v === undefined) return 'null'
-
-  // 其他一律当字符串，用双引号包一层，转义内部双引号和反斜杠
-  const s = String(v)
-    .replace(/\\/g, '\\\\')
-    .replace(/"/g, '\\"')
-  return `"${s}"`
-}
-
-function log(v) {
-  console.log(`[🐱 Clash 模板脚本] ${v}`)
-}
+// 拆行，每一行应该是一个 `- {...}` 节点
+const
