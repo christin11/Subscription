@@ -19,34 +19,55 @@ log(`① 模板读取成功，长度 ${template.length}`)
 
 // ── 2. 拉取订阅节点（Clash 格式）────────────────────────────────────────
 log(`② 读取${type === 'collection' ? '组合' : ''}订阅: ${name}`)
-const proxiesYaml = await produceArtifact({
+let proxiesYaml = await produceArtifact({
   name,
   type,
   platform: 'Clash',
 })
 log(`② 节点数据获取成功，长度 ${proxiesYaml.length}`)
 
+// ── 2.1 去掉顶层的 `proxies:` 头，只保留节点列表 ───────────────────────
+// 一般形如：
+// proxies:
+//   - name: xxx
+//     type: ss
+//   - name: yyy
+//     ...
+proxiesYaml = proxiesYaml.replace(/^proxies:\s*\n/, '')
+
 // ── 3. 构建 proxy-providers 块 ───────────────────────────────────────────
-// produceArtifact Clash 格式返回完整 proxies 列表，每行如：
-// - name: 节点名\n  type: ss\n  ...
-// 嵌入 inline provider 的 proxies: 字段下，缩进6格
+// 现在 proxiesYaml 理论上是：
+// - name: 节点1
+//   type: ss
+// - name: 节点2
+//   ...
+// 我们把每一行缩进 6 个空格，塞到 inline provider 里
 const indentedProxies = proxiesYaml
   .split('\n')
-  .filter(l => l.trim())
-  .map(l => '      ' + l)
+  .filter(l => l.trim())           // 去掉空行
+  .map(l => '      ' + l)          // 每行前加 6 个空格
   .join('\n')
 
 // 用一个唯一一点的名字，避免和别的脚本冲突
-const clashTemplateProviderBlock = `proxy-providers:\n  ${name}:\n    type: inline\n    proxies:\n${indentedProxies}`
+const clashTemplateProviderBlock = `proxy-providers:
+  ${name}:
+    type: inline
+    proxies:
+${indentedProxies}
+`
 log(`③ proxy-providers 块构建完成`)
 
 // ── 4. 注入模板，替换 proxy-providers 区块 ───────────────────────────────
 let result = template
-const pattern = /^proxy-providers:.*?(?=^\w)/ms
+
+// 模板里现在是： proxy-providers: {}
+// 后面紧跟 proxy-groups:，我们把这一小段整体替换掉
+const pattern = /^proxy-providers:.*?(?=^[a-zA-Z])/ms
 if (pattern.test(result)) {
-  result = result.replace(pattern, clashTemplateProviderBlock + '\n')
+  result = result.replace(pattern, clashTemplateProviderBlock)
 } else {
-  result = result.replace('proxy-groups:', clashTemplateProviderBlock + '\nproxy-groups:')
+  // 模板里没有 proxy-providers，就在 proxy-groups: 前面插入
+  result = result.replace('proxy-groups:', clashTemplateProviderBlock + 'proxy-groups:')
 }
 log(`④ 注入完成`)
 
