@@ -1,46 +1,35 @@
 /**
- * @name Clash 完整配置转换
- * @description 自动生成代理组并注入模板
+ * @name Clash完整修复脚本
+ * @description 强制生成策略组以适配模板规则
  */
 
 async function operator(proxies) {
     if (!proxies || proxies.length === 0) return [];
 
-    // 1. 获取所有节点名称
-    const allProxyNames = proxies.map(p => p.name);
+    // 1. 过滤掉流量信息等无效节点（可选，建议保留纯节点）
+    const validProxies = proxies.filter(p => !p.name.includes("剩余流量") && !p.name.includes("重置"));
+    const proxyNames = validProxies.map(p => p.name);
 
-    // 2. 定义策略组 (这是 Clash 能够运行的关键)
-    // Sub-Store 在 Mihomo/Clash 类型下支持返回一个包含 proxies 和 groups 的对象
+    // 2. 这里的组名必须和你 Flyint.txt 规则里的名字完全一致
     const groups = [
-        {
-            name: "🚀 节点选择",
-            type: "select",
-            proxies: ["URL-Test", ...allProxyNames]
-        },
-        {
-            name: "URL-Test",
-            type: "url-test",
-            url: "http://www.gstatic.com/generate_204",
-            interval: 300,
-            proxies: allProxyNames
-        },
-        {
-            name: "🎬 奈飞视频",
-            type: "select",
-            proxies: ["🚀 节点选择", ...allProxyNames]
-        },
-        {
-            name: "境外媒体",
-            type: "select",
-            proxies: ["🚀 节点选择", ...allProxyNames]
-        }
-        // 你可以根据 Flyint.txt 里的 rules 需求继续添加组
+        { name: "🚀 节点选择", type: "select", proxies: ["自动选择", "DIRECT", ...proxyNames] },
+        { name: "自动选择", type: "url-test", proxies: proxyNames, url: "http://www.gstatic.com/generate_204", interval: 300 },
+        { name: "🎬 奈飞视频", type: "select", proxies: ["🚀 节点选择", "DIRECT", ...proxyNames] },
+        { name: "🎬 迪士尼+", type: "select", proxies: ["🚀 节点选择", "DIRECT", ...proxyNames] },
+        { name: "🎬 YouTube", type: "select", proxies: ["🚀 节点选择", "DIRECT", ...proxyNames] },
+        { name: "🎬 Spotify", type: "select", proxies: ["🚀 节点选择", "DIRECT", ...proxyNames] },
+        { name: "境外媒体", type: "select", proxies: ["🚀 节点选择", "DIRECT", ...proxyNames] },
+        { name: "国内媒体", type: "select", proxies: ["DIRECT", "🚀 节点选择"] },
+        { name: "电报信息", type: "select", proxies: ["🚀 节点选择", ...proxyNames] },
+        { name: "苹果服务", type: "select", proxies: ["DIRECT", "🚀 节点选择", ...proxyNames] },
+        { name: "谷歌服务", type: "select", proxies: ["🚀 节点选择", "DIRECT", ...proxyNames] },
+        { name: "微软服务", type: "select", proxies: ["DIRECT", "🚀 节点选择", ...proxyNames] },
+        { name: "漏网之鱼", type: "select", proxies: ["🚀 节点选择", "DIRECT", ...proxyNames] }
     ];
 
-    // 3. 返回给 Sub-Store
-    // 这种格式会自动填充到 Clash 模板的对应位置
+    // 3. 返回包含节点和组的对象
     return {
-        proxies: proxies,
+        proxies: validProxies,
         groups: groups
     };
 }
