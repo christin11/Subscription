@@ -91,6 +91,8 @@ proxy-groups:
   - name: ♻️ 自动选择
     type: url-test
     icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Auto.png'
+    url: https://www.epochtimes.com/
+    interval: 300
     include-all: true
 
   - name: 🚀 手动切换
