@@ -93,10 +93,15 @@ proxy-groups:
     icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Auto.png'
     url: http://www.gstatic.com/generate_204
     interval: 300
+    proxies:
+      - PLACEHOLDER
 
   - name: 🚀 手动切换
     type: select
     icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Static.png'
+    proxies:
+      - DIRECT
+      - PLACEHOLDER
 
   - name: ⏱️ 网络测速
     type: select
