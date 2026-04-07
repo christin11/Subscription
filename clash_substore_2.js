@@ -46,8 +46,8 @@ async function operator({ request, response }) {
 
     // 将 proxies 插入到模板中的标记位置
     const output = template.replace(
-        "#__PROXIES__",
-        proxies
+    "#__PROXIES__",
+    proxies.trim() + "\n\n"
     );
 
     return response.success({
