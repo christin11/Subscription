@@ -341,12 +341,12 @@ rules:
   
 http:
   script:
-  shortcuts:
-    flyint_fix:
-      type: dns
-      code: |
-        if ($request.hostname.endsWith(".bestvmr.com")) {
-          $done({ server: "quic://47.110.75.65:8053" });
-        } else {
-          $done({});
-        }
+    shortcuts:
+      flyint_fix:
+        type: dns
+        code: |
+          if ($request.hostname.endsWith(".bestvmr.com")) {
+            $done({ server: "quic://47.110.75.65:8053" });
+          } else {
+            $done({});
+          }
