@@ -21,15 +21,15 @@ if (!template) throw new Error('❌ 模板内容为空')
 
 // ── 2. 定义地区分组和匹配规则 ──────────────
 const regionConfig = {
-  '🇭🇰 香港节点': /(?i)香港|HK|Hong Kong|Hongkong/,
-  '🇹🇼 台湾节点': /(?i)台湾|臺灣|TW|Taiwan/,
-  '🇯🇵 日本节点': /(?i)日本|JP|Japan|東京|大阪|京都/,
-  '🇰🇷 韩国节点': /(?i)韩国|韓國|KR|Korea|首尔|釜山/,
-  '🇸🇬 新加坡节点': /(?i)新加坡|SG|Singapore|狮城/,
-  '🇹🇭 泰国节点': /(?i)泰国|泰國|TH|Thailand|曼谷/,
-  '🇺🇸 美国节点': /(?i)美国|美國|US|United States|美|洛杉矶|纽约|西雅图/,
-  '🇩🇪 德国节点': /(?i)德国|德國|DE|Germany|柏林/,
-  '🇬🇧 英国节点': /(?i)英国|英國|UK|United Kingdom|伦敦/
+  '🇭🇰 香港节点': /香港|HK|Hong Kong|Hongkong/i,
+  '🇹🇼 台湾节点': /台湾|臺灣|TW|Taiwan/i,
+  '🇯🇵 日本节点': /日本|JP|Japan|東京|大阪|京都/i,
+  '🇰🇷 韩国节点': /韩国|韓國|KR|Korea|首尔|釜山/i,
+  '🇸🇬 新加坡节点': /新加坡|SG|Singapore|狮城/i,
+  '🇹🇭 泰国节点': /泰国|泰國|TH|Thailand|曼谷/i,
+  '🇺🇸 美国节点': /美国|美國|US|United States|美|洛杉矶|纽约|西雅图/i,
+  '🇩🇪 德国节点': /德国|德國|DE|Germany|柏林/i,
+  '🇬🇧 英国节点': /英国|英國|UK|United Kingdom|伦敦/i
 }
 
 // ── 3. 拉取订阅中的代理节点（Clash 格式） ───
