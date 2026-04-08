@@ -2,7 +2,11 @@
 // Clash 模板节点注入脚本 - SubStore 版
 // ============================================
 
-log('开始处理...')
+const logger = (msg) => {
+  try { console.log(msg) } catch(e) { }
+}
+
+logger('开始处理...')
 
 let { type, name } = $arguments
 if (!name) throw new Error('缺少参数 name')
@@ -26,7 +30,7 @@ const regionMatch = {
 }
 
 // 拉取节点
-log('拉取订阅...')
+logger('拉取订阅...')
 let proxiesYaml = await produceArtifact({
   name,
   type,
@@ -45,7 +49,7 @@ for (const line of lines) {
   }
 }
 
-log('获取 ' + proxies.length + ' 个代理')
+logger('获取 ' + proxies.length + ' 个代理')
 
 // 分配到地区
 const regionProxies = {}
@@ -101,5 +105,5 @@ for (const region in regionProxies) {
   }
 }
 
-log('完成')
+logger('完成，注入 ' + proxies.length + ' 个代理')
 $content = result
