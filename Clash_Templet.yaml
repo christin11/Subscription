@@ -728,6 +728,56 @@ rules:
   # 规则优先级从上到下排列
   - GEOIP,CN,🌐 全球直连
   - MATCH,🌍 兜底分流
+  - RULE-SET,Direct,🌐 全球直连
+  - RULE-SET,ChinaASN,🌐 全球直连
+  - RULE-SET,ChinaDomain,🌐 全球直连
+  - RULE-SET,ChinaIP,🌐 全球直连
+  - RULE-SET,Lan,🌐 全球直连
+  - RULE-SET,Reject,Reject
+  - RULE-SET,AdGuardChinese,🛑 广告拦截
+  - RULE-SET,EasyListChina,🛑 广告拦截
+  - RULE-SET,EasyListPrivacy,🛑 广告拦截
+  - RULE-SET,Ads_limbopro,🛑 广告拦截
+  - RULE-SET,BanProgramAD,🧹 应用净化
+  - RULE-SET,ProxyGFW,🧱 GFW网站
+    - RULE-SET,Speedtest,⏱️ 网络测速
+  - RULE-SET,YouTube,🔍 谷歌服务
+  - RULE-SET,Google,🔍 谷歌服务
+  - RULE-SET,Microsoft,Ⓜ️ 微软服务
+  - RULE-SET,Github,Ⓜ️ 微软服务
+  - RULE-SET,OneDrive,Ⓜ️ 微软服务
+  - RULE-SET,Xbox,Ⓜ️ 微软服务
+  - RULE-SET,AppleCN,🍎 苹果服务
+  - RULE-SET,AppleProxy,🍎 苹果服务
+  - RULE-SET,AppleNews,📰 苹果新闻
+  - RULE-SET,Paypal,🪙 贝宝支付
+  - RULE-SET,AI,🤖️ 人工智能
+  - RULE-SET,Line,📤 Line消息
+  - RULE-SET,Telegram,📱 电报消息
+  - RULE-SET,Discord,🐦 Discord消息
+  - RULE-SET,Facebook,👤 脸书消息
+  - RULE-SET,Twitter,📄 推特消息
+  - RULE-SET,Reddit,📖 红迪消息
+  - RULE-SET,TikTok,🫟 TikTok
+  - RULE-SET,Spotify,🎻 Spotify
+  - RULE-SET,JOOX,🎹 JOOX
+  - RULE-SET,Deezer,🎷 Deezer
+  - RULE-SET,Netflix,🎥 奈飞视频
+  - RULE-SET,Disney,🎬 迪士尼+
+  - RULE-SET,PrimeVideo,📀 亚马逊服务
+  - RULE-SET,HBO,🎬 HBO视频
+  - RULE-SET,BBC,🗼 BBC
+  - RULE-SET,DAZN,🏟️ DAZN
+  - RULE-SET,AbemaTV,🖼️ AbemaTV
+  - RULE-SET,Bahamut,📽 巴哈姆特
+  - RULE-SET,ProxyMedia,🍿 境外媒体
+  - RULE-SET,ChinaMedia,🍔 国内媒体
+  - RULE-SET,Bilibili,📽 哔哩哔哩
+  - RULE-SET,Emby,🛋️ Emby
+  - RULE-SET,Twitch,📺 Twitch直播
+  - RULE-SET,Steam,🎮 游戏平台
+  - RULE-SET,Epic,🎮 游戏平台
+  - RULE-SET,Games,🎮 游戏平台
 
 # ========== 使用说明 ==========
 # 1. 在 proxies 部分添加你的代理服务器
