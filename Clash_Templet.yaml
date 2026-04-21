@@ -1,9 +1,3 @@
-# ==========================================================
-# 修复说明：
-# 1. 修复了 rule-providers 缺失 type: http 的问题（通过正确引用锚点）。
-# 2. 统一了策略组和规则集中的 Emoji/特殊字符引用。
-# 3. 保持了你要求的 DNS 和 分流规则结构。
-# ==========================================================
 
 proxy-providers:
   Airport:
@@ -163,14 +157,14 @@ proxy-groups:
   - {name: "🍎 苹果服务", !!merge <<: *pr}
   - {name: "📰 苹果新闻", type: select, proxies: ["🇺🇸 美国节点", "🚀 手动切换"]}
   - {name: "🪙 贝宝支付", !!merge <<: *pr}
-  - {name: "🤖️ 人工智能", type: select, proxies: ["🇺🇸 美国节点", "🇯🇵 日本节点", "🇸🇬 新加坡节点", "🇹🇼 台湾节点", "🇰🇷 韩国节点", "🇬🇧 英国节点", "🚀 手动切换"]}
+  - {name: "🤖️ 人工智能", type: select, proxies: ["🇹🇼 台湾节点", "🇸🇬 新加坡节点", "🇹🇭 泰国节点", "🇺🇸 美国节点", "🇩🇪 德国节点", "🇬🇧 英国节点", "🚀 手动切换"]}
   - {name: "📤 Line消息", !!merge <<: *pr}
   - {name: "📱 电报消息", !!merge <<: *pr}
   - {name: "🐦 Discord消息", !!merge <<: *pr}
   - {name: "👤 脸书消息", !!merge <<: *pr}
   - {name: "📄 推特消息", !!merge <<: *pr}
   - {name: "📖 红迪消息", !!merge <<: *pr}
-  - {name: "🫟 TikTok", type: select, proxies: ["🇺🇸 美国节点", "🇯🇵 日本节点", "🇸🇬 新加坡节点", "🇹🇼 台湾节点", "🇰🇷 韩国节点", "🇬🇧 英国节点", "🚀 手动切换"]}
+  - {name: "🫟 TikTok", type: select, proxies: ["🇹🇼 台湾节点", "🇸🇬 新加坡节点", "🇹🇭 泰国节点", "🇺🇸 美国节点", "🇩🇪 德国节点", "🇬🇧 英国节点", "🚀 手动切换"]}
   - {name: "🎻 Spotify", !!merge <<: *pr}
   - {name: "🎹 JOOX", type: select, proxies: ["🇭🇰 香港节点", "🇹🇭 泰国节点", "🚀 手动切换"]}
   - {name: "🎷 Deezer", type: select, proxies: ["🇩🇪 德国节点", "🇬🇧 英国节点", "🚀 手动切换"]}
