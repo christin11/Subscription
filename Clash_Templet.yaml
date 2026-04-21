@@ -151,29 +151,28 @@ proxy-groups:
   - {name: "🔍 谷歌服务", !!merge <<: *pr}
   - {name: "Ⓜ️ 微软服务", !!merge <<: *pr}
   - {name: "🍎 苹果服务", !!merge <<: *pr}
-  - {name: "📰 苹果新闻", !!merge <<: *pr}
+  - {name: "📰 苹果新闻", type: select, proxies: ["🇺🇸 美国节点", "🚀 手动切换"]}
   - {name: "🪙 贝宝支付", !!merge <<: *pr}
-  - {name: "🤖️ 人工智能", !!merge <<: *pr}
+  - {name: "🤖️ 人工智能", type: select, proxies: ["🇺🇸 美国节点", "🇯🇵 日本节点", "🇸🇬 新加坡节点", "🇹🇼 台湾节点", "🇰🇷 韩国节点", "🇬🇧 英国节点", "🚀 手动切换"]}
   - {name: "📤 Line消息", !!merge <<: *pr}
   - {name: "📱 电报消息", !!merge <<: *pr}
   - {name: "🐦 Discord消息", !!merge <<: *pr}
   - {name: "👤 脸书消息", !!merge <<: *pr}
   - {name: "📄 推特消息", !!merge <<: *pr}
   - {name: "📖 红迪消息", !!merge <<: *pr}
-  - {name: "🫟 TikTok", !!merge <<: *pr}
+  - {name: "🫟 TikTok", type: select, proxies: ["🇺🇸 美国节点", "🇯🇵 日本节点", "🇸🇬 新加坡节点", "🇹🇼 台湾节点", "🇰🇷 韩国节点", "🇬🇧 英国节点", "🚀 手动切换"]}
   - {name: "🎻 Spotify", !!merge <<: *pr}
-  - {name: "🎹 JOOX", !!merge <<: *pr}
-  - {name: "🎷 Deezer", !!merge <<: *pr}
+  - {name: "🎹 JOOX", type: select, proxies: ["🇭🇰 香港节点", "🇹🇭 泰国节点", "🚀 手动切换"]}
+  - {name: "🎷 Deezer", type: select, proxies: ["🇩🇪 德国节点", "🇬🇧 英国节点", "🚀 手动切换"]}
   - {name: "📹 油管视频", !!merge <<: *pr}
   - {name: "🎥 奈飞视频", !!merge <<: *pr}
   - {name: "🎬 迪士尼+", !!merge <<: *pr}
   - {name: "🎬 HBO视频", !!merge <<: *pr}
   - {name: "📀 亚马逊服务", !!merge <<: *pr}
-  - {name: "🗼 BBC", !!merge <<: *pr}
+  - {name: "🗼 BBC", type: select, proxies: ["🇬🇧 英国节点", "🚀 手动切换"]}
   - {name: "🏟️ DAZN", !!merge <<: *pr}
-  - {name: "🎞️ ViuTV", !!merge <<: *pr}
-  - {name: "🖼️ AbemaTV", !!merge <<: *pr}
-  - {name: "📽 巴哈姆特", !!merge <<: *pr}
+  - {name: "🎞️ ViuTV", type: select, proxies: ["🇭🇰 香港节点", "🚀 手动切换"]}
+  - {name: "📽 巴哈姆特", type: select, proxies: ["🇭🇰 香港节点", "🇹🇼 台湾节点", "🚀 手动切换"]}
   - {name: "🍿 境外媒体", !!merge <<: *pr}
   - {name: "🍔 国内媒体", type: select, proxies: ["🟢 直连", "✨ 节点选择"]}
   - {name: "📽 哔哩哔哩", type: select, proxies: ["🟢 直连", "✨ 节点选择"]}
@@ -186,15 +185,15 @@ proxy-groups:
   - {name: "🧹 应用净化", type: select, proxies: [REJECT, "🟢 直连"]}
   - {name: "🌐 全球直连", type: select, proxies: ["🟢 直连"]}
 
-  - {name: "🇭🇰 香港节点", type: select, include-all: true, filter: '(?i)🇭🇰|香港|港|HK|(?:Hong)'}
-  - {name: "🇹🇼 台湾节点", type: select, include-all: true, filter: '(?i)🇹🇼|台湾|台灣|TW|(?:Taiwan)'}
-  - {name: "🇯🇵 日本节点", type: select, include-all: true, filter: '(?i)🇯🇵|日本|东京|JP|(?:Japan)'}
-  - {name: "🇰🇷 韩国节点", type: select, include-all: true, filter: '(?i)🇰🇷|韩|韓|KR|(?:Korea)'}
-  - {name: "🇸🇬 新加坡节点", type: select, include-all: true, filter: '(?i)🇸🇬|新加坡|狮城|SG|(?:Singapore)'}
-  - {name: "🇹🇭 泰国节点", type: select, include-all: true, filter: '(?i)🇹🇭|泰国|泰國|TH|(?:Thailand)'}
+  - {name: "🇭🇰 香港节点", type: select, include-all: true, filter: '(?i)🇭🇰|香港|港|\bHK\b|Hong'}
+  - {name: "🇹🇼 台湾节点", type: select, include-all: true, filter: '(?i)🇹🇼|台湾|台灣|台|\bTW\b|Taiwan'}
+  - {name: "🇯🇵 日本节点", type: select, include-all: true, filter: '(?i)🇯🇵|日本|东京|東京|\bJP\b|Japan'}
+  - {name: "🇰🇷 韩国节点", type: select, include-all: true, filter: '(?i)🇰🇷|韩|韓|首尔|\bKR\b|Korea'}
+  - {name: "🇸🇬 新加坡节点", type: select, include-all: true, filter: '(?i)🇸🇬|新加坡|狮|狮城|獅|獅城|\bSG\b|Singapore'}
+  - {name: "🇹🇭 泰国节点", type: select, include-all: true, filter: '(?i)🇹🇭|泰国|泰國|曼谷|\bTH\b|Thailand'}
   - {name: "🇺🇸 美国节点", type: select, include-all: true, filter: '(?i)🇺🇸|美国|洛杉矶|圣何塞|US|(?:States|America)'}
-  - {name: "🇩🇪 德国节点", type: select, include-all: true, filter: '(?i)🇩🇪|德国|德國|DE|(?:Germany)'}
-  - {name: "🇬🇧 英国节点", type: select, include-all: true, filter: '(?i)🇬🇧|英国|英國|UK|(?:United Kingdom)'}
+  - {name: "🇩🇪 德国节点", type: select, include-all: true, filter: '(?i)🇩🇪|德国|德國|DEU|慕尼黑|汉堡|科隆|(?:Germany)'}
+  - {name: "🇬🇧 英国节点", type: select, include-all: true, filter: "(?i)🇬🇧|英国|英國|GBR|\\b(UK|United Kingdom|Kingdom|KINDOM)\\b|^((?!(烏克蘭|乌克兰|🇺🇦|UKR)).)*$"}
 
 # 规则
 rules:
