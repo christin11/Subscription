@@ -217,7 +217,7 @@ proxy-groups:
   - {name: "🎮 游戏平台", !!merge <<: *pr, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png}
   - {name: "🧱 GFW网站", !!merge <<: *pr, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Lock.png}
   - {name: "🌍 兜底分流", !!merge <<: *pr, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png}
-  - {name: "🛑 广告拦截", type: select, proxies: [REJECT, "🟢 直连"], icon: hhttps://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png}
+  - {name: "🛑 广告拦截", type: select, proxies: [REJECT, "🟢 直连"], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png}
   - {name: "🧹 应用净化", type: select, proxies: [REJECT, "🟢 直连"], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Reject.png}
   - {name: "🌐 全球直连", type: select, proxies: ["🟢 直连"], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Direct.png}
 
