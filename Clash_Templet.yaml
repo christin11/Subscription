@@ -171,8 +171,8 @@ proxy-groups:
 
   - name: "🚀 手动切换"
     type: select
-    include-all: true  # 自动包含所有节点，用于手动选点
-    filter: '^((?!直连).)*$' # 过滤掉包含“直连”字样的节点（可选）
+    include-all: true
+    filter: '^((?!直连).)*$'
     icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Proxy.png
 
   - name: "♻️ 自动选择"
