@@ -1,8 +1,8 @@
 proxy-providers:
-  "{{name}}": # <--- 这里的双引号极其重要，它是你的动态“锚点”
+  "{{name}}": # 机场名称
     type: http
     path: ./proxies/{{name}}.yaml
-    url: "{{url}}"
+    url: "{{url}}" # 机场Sub-store订阅链接
     interval: 1800
     health-check:
       enable: true
