@@ -44,8 +44,6 @@ keep-alive-interval: 30
 profile:
   store-selected: true
   store-fake-ip: true
-  # 在这里固定你的配置显示名称
-  name: "🚀 My_Ultimate_Profile"
 
 sniffer:
   enable: true
