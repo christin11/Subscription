@@ -1,4 +1,3 @@
-
 proxy-providers:
   Airport: 
     type: http
@@ -74,17 +73,103 @@ tun:
   auto-redirect: true
   auto-detect-interface: true
 
+# ============ 完整的 DNS 配置（修复版） ============
 dns:
   enable: true
   ipv6: false
-  enhanced-mode: fake-ip
-  fake-ip-range: 198.18.0.1/16
   listen: 0.0.0.0:1053
-  nameserver:
+  
+  # 默认 DNS 服务器（快速基础 DNS）
+  default-nameserver:
     - 223.5.5.5
     - 119.29.29.29
-    - 8.8.8.8
-    - 1.1.1.1
+  
+  # 加密 DNS（DoH/DoT，安全隐私）
+  nameserver:
+    - https://doh.pub/dns-query
+    - https://dns.alidns.com/dns-query
+    - tls://dot.pub:853
+    - tls://dns.alidns.com:853
+  
+  # 备用 DNS（污染检测）
+  fallback:
+    - https://dns.cloudflare.com/dns-query
+    - https://dns.google/dns-query
+    - tls://1.1.1.1:853
+    - tls://8.8.8.8:853
+  
+  # 污染检测配置
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+    ipcidr:
+      - 0.0.0.0/8
+      - 10.0.0.0/8
+      - 100.64.0.0/10
+      - 127.0.0.0/8
+      - 169.254.0.0/16
+      - 172.16.0.0/12
+      - 192.168.0.0/16
+      - 224.0.0.0/4
+      - 240.0.0.0/4
+    domain:
+      - "+.google.com"
+      - "+.facebook.com"
+      - "+.youtube.com"
+      - "+.githubusercontent.com"
+      - "+.googlevideo.com"
+      - "+.googleapis.cn"
+  
+  # Fake IP 模式
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  use-hosts: true
+  
+  # 域名分流（特定域名使用特定 DNS）
+  nameserver-policy:
+    # 机场
+    "*.bestvmr.com": "47.110.75.65:8053"
+    "bestvmr.com": "47.110.75.65:8053"
+    # Google 服务
+    "+.google.com": "https://dns.cloudflare.com/dns-query"
+    "+.googleapis.com": "https://dns.cloudflare.com/dns-query"
+    "+.googleapis.cn": "https://dns.cloudflare.com/dns-query"
+    "+.googlevideo.com": "https://dns.cloudflare.com/dns-query"
+    "+.gstatic.com": "https://dns.cloudflare.com/dns-query"
+    "+.youtube.com": "https://dns.cloudflare.com/dns-query"
+    "+.youtu.be": "https://dns.cloudflare.com/dns-query"
+    # 海外服务
+    "+.facebook.com": "https://dns.cloudflare.com/dns-query"
+    "+.twitter.com": "https://dns.cloudflare.com/dns-query"
+    "+.x.com": "https://dns.cloudflare.com/dns-query"
+    "+.github.com": "https://dns.cloudflare.com/dns-query"
+    "+.githubusercontent.com": "https://dns.cloudflare.com/dns-query"
+    "+.openai.com": "https://dns.cloudflare.com/dns-query"
+    "+.chatgpt.com": "https://dns.cloudflare.com/dns-query"
+    "+.anthropic.com": "https://dns.cloudflare.com/dns-query"
+    # 国内
+    "geosite:cn": "119.29.29.29"
+  
+  # Fake IP 过滤
+  fake-ip-filter:
+    - "*.lan"
+    - "*.local"
+    - "*.localhost"
+    - "*.test"
+    - "localhost.ptlogin2.qq.com"
+    - "+.stun.*.*"
+    - "+.stun.*.*.*"
+    - "+.stun.*.*.*.*"
+    - "lens.l.google.com"
+    - "*.srv.nintendo.net"
+    - "+.stun.playstation.net"
+    - "xbox.*.*.microsoft.com"
+    - "*.*.xboxlive.com"
+    - "+.msftncsi.com"
+    - "+.msftconnecttest.com"
+    - "*.bestvmr.com"
+    - "bestvmr.com"
+    - "+.push.apple.com"
 
 proxies:
   - name: "🟢 直连"
@@ -153,6 +238,7 @@ proxy-groups:
   - {name: "🎮 游戏平台", !!merge <<: *pr, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png}
   - {name: "🧱 GFW网站", !!merge <<: *pr, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Lock.png}
   - {name: "🌍 兜底分流", !!merge <<: *pr, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png}
+  # ============ 广告拦截规则优先级调整（放在最前面） ============
   - {name: "🛑 广告拦截", type: select, proxies: [REJECT, "🟢 直连"], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png}
   - {name: "🧹 应用净化", type: select, proxies: [REJECT, "🟢 直连"], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Reject.png}
   - {name: "🌐 全球直连", type: select, proxies: ["🟢 直连"], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Direct.png}
@@ -167,8 +253,17 @@ proxy-groups:
   - {name: "🇩🇪 德国节点", type: select, include-all: true, filter: '(?i)🇩🇪|德国|德國|DEU|慕尼黑|汉堡|科隆|(?:Germany)', icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Germany.png}
   - {name: "🇬🇧 英国节点", type: select, include-all: true, filter: "(?i)🇬🇧|英国|英國|GBR|\\b(UK|United Kingdom|Kingdom|KINDOM)\\b|^((?!(烏克蘭|乌克兰|🇺🇦|UKR)).)*$", icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_Kingdom.png}
 
-# 规则
+# ============ 规则（修复版 - 广告拦截优先级最高） ============
 rules:
+  # === 最高优先级：广告拦截规则 ===
+  - RULE-SET,BanProgramAD,🧹 应用净化
+  - RULE-SET,Reject,🛑 广告拦截
+  - RULE-SET,AdGuardChinese,🛑 广告拦截
+  - RULE-SET,EasyListChina,🛑 广告拦截
+  - RULE-SET,EasyListPrivacy,🛑 广告拦截
+  - RULE-SET,Ads_limbopro,🛑 广告拦截
+  
+  # === 第二优先级：应用与媒体规则 ===
   - RULE-SET,Speedtest,⏱️ 网络测速
   - RULE-SET,YouTube,🔍 谷歌服务
   - RULE-SET,Google,🔍 谷歌服务
@@ -208,18 +303,16 @@ rules:
   - RULE-SET,Epic,🎮 游戏平台
   - RULE-SET,Games,🎮 游戏平台
   - RULE-SET,ProxyGFW,🧱 GFW网站
-  - RULE-SET,Reject,🛑 广告拦截
-  - RULE-SET,AdGuardChinese,🛑 广告拦截
-  - RULE-SET,EasyListChina,🛑 广告拦截
-  - RULE-SET,EasyListPrivacy,🛑 广告拦截
-  - RULE-SET,Ads_limbopro,🛑 广告拦截
-  - RULE-SET,BanProgramAD,🧹 应用净化
+  
+  # === 第三优先级：国内直连 ===
   - RULE-SET,Direct,🌐 全球直连
   - RULE-SET,ChinaASN,🌐 全球直连
   - RULE-SET,ChinaDomain,🌐 全球直连
   - RULE-SET,ChinaIP,🌐 全球直连
   - RULE-SET,Lan,🌐 全球直连
   - GEOIP,CN,🌐 全球直连
+  
+  # === 最低优先级：兜底分流 ===
   - MATCH,🌍 兜底分流
 
 # 规则锚点定义
@@ -229,9 +322,9 @@ rule-anchor:
   qcy: &qcy {type: http, interval: 259200, behavior: domain, format: text}
   class: &class {type: http, interval: 259200, behavior: classical, format: text}
 
-# 规则集定义 (保持原始链接与条目，仅调整顺序)
+# 规则集定义
 rule-providers:
-  # === 拦截类规则 (移至最上方以确保优先级) ===
+  # === 拦截类规则 (最高优先级) ===
   BanProgramAD: {!!merge <<: *class, url: 'https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanProgramAD.list'}
   Reject: {!!merge <<: *class, url: 'https://github.com/Repcz/Tool/raw/X/Stash/Rules/Reject.list'}
   AdGuardChinese: {!!merge <<: *class, url: 'https://github.com/Repcz/Tool/raw/X/Stash/Rules/AdGuardChinese.list'}
