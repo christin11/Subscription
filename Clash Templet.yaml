@@ -1,5 +1,5 @@
-proxy-providers:
-  Airport: 
+ proxy-providers:
+  AirPort: 
     type: http
     interval: 1800
     health-check:
@@ -7,7 +7,7 @@ proxy-providers:
       url: https://www.epochtimes.com/
       interval: 300
     proxy: "🟢 直连"
-    url: "{{url}}"
+    url: 
 
 global-ua: clash
 
