@@ -208,6 +208,7 @@ proxy-groups:
   - {name: "🇺🇸 美国节点", type: select, include-all: true, filter: '(?i)🇺🇸|美国|洛杉矶|圣何塞|US|(?:States|America)', icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png}
   - {name: "🇩🇪 德国节点", type: select, include-all: true, filter: '(?i)🇩🇪|德国|德國|DEU|慕尼黑|汉堡|科隆|(?:Germany)', icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Germany.png}
   - {name: "🇬🇧 英国节点", type: select, include-all: true, filter: "(?i)🇬🇧|英国|英國|GBR|\\b(UK|United Kingdom|Kingdom|KINDOM)\\b|^((?!(烏克蘭|乌克兰|🇺🇦|UKR)).)*$", icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_Kingdom.png}
+
 # ============ 规则（修复版 - 广告拦截优先级最高） ============
 rules:
   # === 最高优先级：广告拦截规则 ===
